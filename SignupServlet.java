@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Random;
 
@@ -43,14 +42,14 @@ public class SignupServlet extends HttpServlet {
 			ResultSet result = pst.executeQuery();
 			if(result.next()) {
 				con.close();
-				response.sendRedirect("/cs3220stu97/home.jsp?status=21");	
+				response.sendRedirect("/cs3220stu108/home.jsp?status=21");	
 				return;
 			}
 			String pass1 = request.getParameter("password");
 			String pass2 = request.getParameter("password2");
 			if(!pass1.equals(pass2)) {
 				con.close();
-				response.sendRedirect("/cs3220stu97/home.jsp?status=22");	
+				response.sendRedirect("/cs3220stu108/home.jsp?status=22");	
 				return;
 			}
 			//get new id
@@ -73,11 +72,11 @@ public class SignupServlet extends HttpServlet {
 			if (!con.isClosed()) {
 			      con.close();
 			}
-    		response.sendRedirect("/cs3220stu97/home.jsp?status=0");	
+    		response.sendRedirect("/cs3220stu108/home.jsp?status=0");	
 
 		} catch (Exception e) {
 			response.getWriter().append(e.getMessage());
-
+			response.sendRedirect("/cs3220stu97/home.jsp?status=3");
 		}	
 
 	
