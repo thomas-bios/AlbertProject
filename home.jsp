@@ -25,7 +25,7 @@
     
   </form>
   
-  <c:if test="${not empty param.eLog && param.eLog == '1'}">
+  <c:if test="${not empty param.status && param.status == '11'}">
       <p>User name or password incorrect</p>
   </c:if>
   
@@ -36,13 +36,13 @@
       Set password
       <input type="password" required name="password"/><br>
       Retype password
-      <input type="password" required name="password"/>
+      <input type="password" required name="password2"/>
       
       <input type="submit" value="submit">      
     
   </form>
-  <c:if test="${not empty param.eNew && param.eNew == '1'}">
-      <p>There is a error, please review your submission</p>
+  <c:if test="${not empty param.eNew && (param.status == '21' || param.eNew == '22')}">
+      <p>error</p>
   </c:if>
 
 </body>
