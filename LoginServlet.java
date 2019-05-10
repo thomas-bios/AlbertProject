@@ -14,9 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet("/JeNuage/LoginServlet")
+@WebServlet("/iNuage/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -31,17 +33,43 @@ public class LoginServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String name = request.getParameter("userName");
+		String uN = request.getParameter("userName");
 		String pass = request.getParameter("password");
 
 	    try {
 			Connection con = DriverManager.getConnection(connection, user, password);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 
-		
-		response.getWriter().append("ok " + name + " : " + pass);
+			//get user's info
+			PreparedStatement pst = con.prepareStatement("select * from jenuage_users where user_name = \""+ uN + "\";");
+			ResultSet result = pst.executeQuery();
+			if(!result.next()) {
+				//user do not exist
+				con.close();
+				response.sendRedirect("/cs3220stu97/home.jsp?status=11");	
+				return;
+			}		
+			int u_id = result.getInt("id");
+			String u_hashedPassword = result.getString("password");
+			
+			//Password test 
+			boolean isPasswordCorrect = check(pass,u_hashedPassword);
+			
+			if(!isPasswordCorrect) {
+				//password not correct
+				con.close();
+				response.sendRedirect("/cs3220stu97/home.jsp?status=11");
+				return;
+			}
+			//password correct : go to user interface
+			//add cookie if remember me check (soon ...)
+			
+			
+			request.setAttribute("user_id", u_id);
+			request.getRequestDispatcher("/iNuage.jsp").forward(request, response);
+			
+			con.close();
+			response.getWriter().append(uN + " : " + u_id + " : " + u_hashedPassword + "\n" + isPasswordCorrect); 
+	    } catch ( Exception e) {e.printStackTrace();}
 
 	}
 	
@@ -71,4 +99,3 @@ public class LoginServlet extends HttpServlet {
     }
 
 }
-
