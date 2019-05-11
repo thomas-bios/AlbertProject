@@ -18,14 +18,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import iNuage.Sql_id;
+
 @WebServlet("/iNuage/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    private String driver = "com.mysql.jdbc.Driver";
-    private String connection = "jdbc:mysql://cs3.calstatela.edu/cs3220stu97";
-    private String user = "cs3220stu97";
-    private String password = "TZ*JTLXb";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendRedirect(request.getContextPath() + "/iNuage?status=11");	
@@ -36,7 +34,7 @@ public class LoginServlet extends HttpServlet {
 			String uN = request.getParameter("userName");
 			String pass = request.getParameter("password");
 
-			Connection con = DriverManager.getConnection(connection, user, password);
+			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
 
 			//get user's info
 			PreparedStatement pst = con.prepareStatement("select * from jenuage_users where user_name = \""+ uN + "\";");
