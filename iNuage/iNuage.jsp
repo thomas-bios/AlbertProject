@@ -35,7 +35,7 @@
 	            <div class="row">
 	                <div class="col-md"><h5>My Files</h5></div>
 	                <div class="col-md text-center""><i class="fas fa-file-upload" data-toggle="modal" data-target="#uploader" style="cursor: pointer; color: #0376D1;"> - UPLOAD</i></div>
-	                <div class="col-md"><span class="float-right"><a href="#"> Log out </a></span></div>
+	                <div class="col-md"><span class="float-right"><a href="iNuage/action?c=logout"> Log out </a></span></div>
 		        </div>
 		        </div>
 		    </div>
@@ -75,8 +75,30 @@
         </div>
       </div>
       <!-- ----------------- -->
+      
+      
+      <!-- ACCOUNT DELETER -->
+      <div class="modal fade" id="accountDeleter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content bg-dark">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Upload a new file</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                  Are you sure you want to permanently delete your iNuage account ?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <a href="iNuage/action?c=delete"><button type="button" class="btn btn-success">Yes</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <small class="d-block text-right mt-3"><a href="#">Delete Account </a></small>
+      <small class="d-block text-right mt-3" data-toggle="modal" data-target="#accountDeleter" style="cursor: pointer; color: #0376D1;">Delete Account</small>
     </div>
 </body>
 

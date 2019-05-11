@@ -106,6 +106,16 @@
              <br>
          </c:if>
          
+         <c:if test="${not empty param.status && param.status == '5'}">
+             <div class="card bg-warning">
+                 <div class="card-header">ACCOUNT DELETED</div>
+                 <div class="card-body">
+                     <p class="card-text">Your account have been successfully deleted. We are sorry to see you leave so soon !</p>
+                 </div>
+             </div>
+             <br>
+         </c:if>
+         
          <c:if test="${not empty param.status && param.status == '0'}">
              <div class="card bg-warning">
                  <div class="card-header">ACCOUNT CREATION SUCCESS</div>
