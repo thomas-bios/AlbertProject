@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<c:if test="${sessionScope.user_id_string == null}">
+    <jsp:forward page="home.jsp"/>
+</c:if>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +24,7 @@
         <div class="jumbotron jumbotron-fluid bg-dark">
             <div class="container">
                 <h1 class="display-4">iNuage</h1>
-                <p class="lead">Welcome %username%, this is your online iNuage repository</p>
+                <p class="lead">Welcome ${sessionScope.user_name_string}, this is your online iNuage repository</p>
             </div>
         </div>
 
