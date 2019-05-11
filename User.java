@@ -1,4 +1,4 @@
-package jeNuage;
+package iNuage;
 
 
 public class User {

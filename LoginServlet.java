@@ -1,4 +1,4 @@
-package jeNuage;
+package iNuage;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -6,11 +6,13 @@ import java.util.Base64;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,15 +30,14 @@ public class LoginServlet extends HttpServlet {
     private String password = "TZ*JTLXb";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		response.getWriter().append("Served at: ");
+		response.sendRedirect("/cs3220stu97/home.jsp?status=11");	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String uN = request.getParameter("userName");
-		String pass = request.getParameter("password");
-
 	    try {
+			String uN = request.getParameter("userName");
+			String pass = request.getParameter("password");
+
 			Connection con = DriverManager.getConnection(connection, user, password);
 
 			//get user's info
@@ -45,7 +46,7 @@ public class LoginServlet extends HttpServlet {
 			if(!result.next()) {
 				//user do not exist
 				con.close();
-				response.sendRedirect("/cs3220stu97/home.jsp?status=11");	
+				response.sendRedirect(request.getContextPath() + "/home.jsp?status=11");	
 				return;
 			}		
 			int u_id = result.getInt("id");
@@ -57,18 +58,22 @@ public class LoginServlet extends HttpServlet {
 			if(!isPasswordCorrect) {
 				//password not correct
 				con.close();
-				response.sendRedirect("/cs3220stu97/home.jsp?status=11");
+				response.sendRedirect(request.getContextPath() + "/home.jsp?status=11");
 				return;
 			}
 			//password correct : go to user interface
 			//add cookie if remember me check (soon ...)
 			
-			
-			request.setAttribute("user_id", u_id);
-			request.getRequestDispatcher("/iNuage.jsp").forward(request, response);
-			
+			HttpSession session = request.getSession();
+			session.setAttribute("user_id_int", u_id);
+			session.setAttribute("user_id_string", String.valueOf(u_id));
+			session.setAttribute("user_name_string", uN);
+
+			//request.setAttribute("user_id", u_id);
+			//request.getRequestDispatcher("/iNuage").forward(request, response);
+			response.sendRedirect(request.getContextPath() + "/iNuage");	
+
 			con.close();
-			response.getWriter().append(uN + " : " + u_id + " : " + u_hashedPassword + "\n" + isPasswordCorrect); 
 	    } catch ( Exception e) {e.printStackTrace();}
 
 	}

@@ -1,4 +1,4 @@
-package jeNuage;
+package iNuage;
 
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/JeNuage/SignupServlet")
+@WebServlet("/iNuage/SignupServlet")
 public class SignupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -28,13 +28,12 @@ public class SignupServlet extends HttpServlet {
     private String password = "TZ*JTLXb";
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.sendRedirect("/cs3220stu97/home.jsp?status=11");	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    String uN = request.getParameter("userName");
-		
 		try {
+		    String uN = request.getParameter("userName");
 			Connection con = DriverManager.getConnection(connection, user, password);
 			
 			//2 test 
@@ -42,14 +41,14 @@ public class SignupServlet extends HttpServlet {
 			ResultSet result = pst.executeQuery();
 			if(result.next()) {
 				con.close();
-				response.sendRedirect("/cs3220stu97/home.jsp?status=21");	
+				response.sendRedirect(request.getContextPath() + "/home.jsp?status=21");	
 				return;
 			}
 			String pass1 = request.getParameter("password");
 			String pass2 = request.getParameter("password2");
 			if(!pass1.equals(pass2)) {
 				con.close();
-				response.sendRedirect("/cs3220stu97/home.jsp?status=22");	
+				response.sendRedirect(request.getContextPath() + "/home.jsp?status=22");	
 				return;
 			}
 			//get new id
@@ -72,10 +71,10 @@ public class SignupServlet extends HttpServlet {
 			if (!con.isClosed()) {
 			      con.close();
 			}
-    		response.sendRedirect("/cs3220stu97/home.jsp?status=0");	
+    		response.sendRedirect(request.getContextPath() + "/home.jsp?status=0");	
 
 		} catch (Exception e) {
-			response.sendRedirect("/cs3220stu97/home.jsp?status=3");	
+			response.sendRedirect(request.getContextPath() + "/home.jsp?status=3");	
 		}	
 
 	
