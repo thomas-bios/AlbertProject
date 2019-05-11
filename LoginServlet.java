@@ -6,7 +6,6 @@ import java.util.Base64;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +17,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 @WebServlet("/iNuage/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -30,7 +28,7 @@ public class LoginServlet extends HttpServlet {
     private String password = "TZ*JTLXb";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect("/cs3220stu97/home.jsp?status=11");	
+		response.sendRedirect(request.getContextPath() + "/iNuage?status=11");	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 			if(!result.next()) {
 				//user do not exist
 				con.close();
-				response.sendRedirect(request.getContextPath() + "/home.jsp?status=11");	
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=11");	
 				return;
 			}		
 			int u_id = result.getInt("id");
@@ -58,7 +56,7 @@ public class LoginServlet extends HttpServlet {
 			if(!isPasswordCorrect) {
 				//password not correct
 				con.close();
-				response.sendRedirect(request.getContextPath() + "/home.jsp?status=11");
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=11");
 				return;
 			}
 			//password correct : go to user interface

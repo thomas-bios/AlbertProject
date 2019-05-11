@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Random;
 
@@ -28,7 +27,7 @@ public class SignupServlet extends HttpServlet {
     private String password = "TZ*JTLXb";
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect("/cs3220stu97/home.jsp?status=11");	
+		response.sendRedirect(request.getContextPath() + "/iNuage?status=11");	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,14 +40,15 @@ public class SignupServlet extends HttpServlet {
 			ResultSet result = pst.executeQuery();
 			if(result.next()) {
 				con.close();
-				response.sendRedirect(request.getContextPath() + "/home.jsp?status=21");	
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=21");	
+				//response.sendRedirect(request.getContextPath() + "/home.jsp?status=21");	
 				return;
 			}
 			String pass1 = request.getParameter("password");
 			String pass2 = request.getParameter("password2");
 			if(!pass1.equals(pass2)) {
 				con.close();
-				response.sendRedirect(request.getContextPath() + "/home.jsp?status=22");	
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=22");	
 				return;
 			}
 			//get new id
@@ -71,10 +71,10 @@ public class SignupServlet extends HttpServlet {
 			if (!con.isClosed()) {
 			      con.close();
 			}
-    		response.sendRedirect(request.getContextPath() + "/home.jsp?status=0");	
+    		response.sendRedirect(request.getContextPath() + "/iNuage?status=0");	
 
 		} catch (Exception e) {
-			response.sendRedirect(request.getContextPath() + "/home.jsp?status=3");	
+			response.sendRedirect(request.getContextPath() + "/iNuage?status=3");	
 		}	
 
 	
