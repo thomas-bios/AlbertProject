@@ -28,43 +28,47 @@
             </div>
         </div>
 
-    <!-- Available files -->
-    <div class="my-3 p-3 rounded shadow-sm">
-      <div class="form-group row border-bottom border-gray pb-2 mb-0 ">
-                <h6 class="col-sm-6">My Files</h6>
-                <div class="col-sm-5"><i class="fas fa-file-upload" data-toggle="modal" data-target="#uploader" style="color: green;"></i></div>
-                <span class="float-right"><a href="#"> Log out </a></span>
-            </div>
-        </div>
+	    <!-- Available files -->
+		<div class="my-3 p-3 rounded shadow-sm">
+	        <div class="form-group row border-bottom border-gray pb-2 mb-0 ">
+	            <div class="container-fluid">
+	            <div class="row">
+	                <div class="col-md"><h5>My Files</h5></div>
+	                <div class="col-md text-center""><i class="fas fa-file-upload" data-toggle="modal" data-target="#uploader" style="cursor: pointer; color: #0376D1;"> - UPLOAD</i></div>
+	                <div class="col-md"><span class="float-right"><a href="#"> Log out </a></span></div>
+		        </div>
+		        </div>
+		    </div>
+		</div>
 
 
-          <!-- Uploader -->
-          <div class="modal fade" id="uploader" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content bg-dark">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Upload a new file</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                      <!-- FORM D'UPLOAD DE FILES -->
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-success">Upload</button>
-                </div>
-              </div>
-            </div>
-          </div>
+		<!-- Uploader -->
+		<div class="modal fade" id="uploader" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content bg-dark">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Upload a new file</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		            <!-- FORM D'UPLOAD DE FILES -->
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-success">Upload</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
           
           
       <!-- New file template -->
       <div class="media text-muted pt-3">
         <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
           <div class="d-flex justify-content-between align-items-center w-100">
-            <a href="New_User_GUIDE.txt"><strong class="text-gray-dark">New_User_GUIDE.txt</strong></a>
+            <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New_User_GUIDE.txt</strong></a>
             <a href="#">Delete</a>
           </div>
           <span class="d-block"> 15 Jun 1987 </span>
@@ -74,7 +78,6 @@
 
       <small class="d-block text-right mt-3"><a href="#">Delete Account </a></small>
     </div>
-  </div>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -46,7 +46,7 @@
     <div class="row">
       <div class="col-md"></div>
       <div class="col-md">
-        <img src="images/jeNuage_logo.png" alt="">
+        <img src="iNuage/images/iNuage_logo.png" alt="">
       </div>
       <div class="col-md"></div>
     </div>
@@ -77,34 +77,44 @@
         </c:if>
         
         <c:if test="${not empty param.status && param.status == '22'}">
-                    <div class="card bg-danger">
-                        <div class="card-header">SIGN-UP ERROR</div>
-                        <div class="card-body">
-                            <p class="card-text"> Passwords doesn't match</p>
-                        </div>
-                    </div>
-                    <br>
-                </c:if>
-                
-                <c:if test="${not empty param.status && param.status == '3'}">
-                    <div class="card bg-danger">
-                        <div class="card-header">UNKNOWN ERROR</div>
-                        <div class="card-body">
-                            <p class="card-text">Our fabulous French technicians are working hard to resolve this problem. Please try again later.</p>
-                        </div>
-                    </div>
-                    <br>
-                </c:if>
-                
-                <c:if test="${not empty param.status && param.status == '0'}">
-                    <div class="card bg-warning">
-                        <div class="card-header">ACCOUNT CREATION SUCCESS</div>
-                        <div class="card-body">
-                            <p class="card-text">Your account was successfully created, you may now login.</p>
-                        </div>
-                    </div>
-                    <br>
-                </c:if>
+             <div class="card bg-danger">
+                 <div class="card-header">SIGN-UP ERROR</div>
+                 <div class="card-body">
+                     <p class="card-text"> Passwords doesn't match</p>
+                 </div>
+             </div>
+             <br>
+         </c:if>
+         
+         <c:if test="${not empty param.status && param.status == '3'}">
+             <div class="card bg-danger">
+                 <div class="card-header">UNKNOWN ERROR</div>
+                 <div class="card-body">
+                     <p class="card-text">Our fabulous French technicians are working hard to resolve this problem. Please try again later.</p>
+                 </div>
+             </div>
+             <br>
+         </c:if>
+         
+         <c:if test="${not empty param.status && param.status == '4'}">
+             <div class="card bg-warning">
+                 <div class="card-header">LOGED OUT</div>
+                 <div class="card-body">
+                     <p class="card-text">You have been successfully logged out of iNuage.</p>
+                 </div>
+             </div>
+             <br>
+         </c:if>
+         
+         <c:if test="${not empty param.status && param.status == '0'}">
+             <div class="card bg-warning">
+                 <div class="card-header">ACCOUNT CREATION SUCCESS</div>
+                 <div class="card-body">
+                     <p class="card-text">Your account was successfully created, you may now login.</p>
+                 </div>
+             </div>
+             <br>
+         </c:if>
         <!-- ERROR LOGS END-->
 
       </div>
@@ -143,7 +153,7 @@
             </div>
             <div class="card-footer text-muted">
               <input class="btn btn-success" type="submit"
-                value="Access JeNuage">
+                value="Access iNuage">
             </div>
           </form>
         </div>
@@ -178,7 +188,7 @@
               </div>
             </div>
             <div class="card-footer text-muted">
-              <input class="btn btn-primary" type="submit" value="Join JeNuage">
+              <input class="btn btn-primary" type="submit" value="Join iNuage">
             </div>
           </form>
         </div>
