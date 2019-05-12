@@ -14,18 +14,16 @@ import javax.servlet.http.HttpSession;
 public class iNuage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 
 		if(session.getAttribute("user_id_int") == null) {
-			request.getRequestDispatcher("home.jsp").forward(request, response);
+			request.getRequestDispatcher("iNuage/home.jsp").forward(request, response);
 			return;
 		}
 		
-		request.getRequestDispatcher("iNuage.jsp").forward(request, response);
+		request.getRequestDispatcher("iNuage/iNuage.jsp").forward(request, response);
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);

@@ -18,10 +18,14 @@ import iNuage.Sql_id;
 public class Action extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String action = request.getParameter("c");
+		if(session.getAttribute("user_id_int") == null) {
+			request.getRequestDispatcher("iNuage/home.jsp").forward(request, response);
+			return;
+		}
+		
 		
 		switch(action) {
 			case("logout"):
@@ -32,9 +36,13 @@ public class Action extends HttpServlet {
 				deleteAccount((String)session.getAttribute("user_id_string"),request);
 				response.sendRedirect(request.getContextPath() + "/iNuage?status=5");
 				break;
+			case("down"):
+				downloadFile((String)session.getAttribute("user_id_string"),request.getParameter("dname"));
+				break;
+			case("del"):
+				downloadFile((String)session.getAttribute("user_id_string"),request.getParameter("dname"));
+				break;
 		}
-		
-			
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -66,4 +74,21 @@ public class Action extends HttpServlet {
 		}
 		return true;
 	}
+	
+	protected boolean downloadFile(String user_id, String file_name) {
+		
+		
+		return true;
+	}
+	
+	protected boolean removeFile(String user_id, String c ) {
+		
+		return true;
+	}
 }
+
+
+
+
+
+
