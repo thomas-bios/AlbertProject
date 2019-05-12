@@ -153,13 +153,6 @@
                   <input class="form-control" type="password" required name="password" placeholder="Enter your Password" /><br>
                 </div>
               </div>
-
-              <div class="form-group row">
-                <div class="col-md">
-                  <input class="form-check-input" type="checkbox" name="stayco" value="true" /> 
-                  <label class="form-check-label" for="stayco">Remember me </label>
-                </div>
-              </div>
             </div>
             <div class="card-footer text-muted">
               <input class="btn btn-success" type="submit"
