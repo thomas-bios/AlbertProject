@@ -44,10 +44,12 @@ public class Action extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/iNuage?status=01");
 				break;
 			case("sha"):
-				//WIP
+				shareFile((String)session.getAttribute("user_id_string"),Integer.parseInt(request.getParameter("fid")),Integer.parseInt(request.getParameter("state")));
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=03");
 				break;
 			case("ren"):
-				//WIP
+				renameFile((String)session.getAttribute("user_id_string"),Integer.parseInt(request.getParameter("fid")),request.getParameter("newname"));
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=02");
 				break;
 		}
 	}
@@ -94,7 +96,7 @@ public class Action extends HttpServlet {
 		{		
 			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
 			
-			String l = "delete from jenuage_docs where file_id = " + file_id + ";";
+			String l = "delete from jenuage_docs where user = \"" + user_id + "\"and file_id = " + file_id + ";";
 			PreparedStatement pst = con.prepareStatement(l);
 			pst.executeUpdate();
 			
@@ -102,6 +104,40 @@ public class Action extends HttpServlet {
 
 		}
 	}
+	
+	protected void renameFile(String user_id, int file_id, String newname)
+	{
+		try
+		{		
+			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
+			
+			String l = "update jenuage_docs set name=\"" + newname + "\" where user = \"" + user_id + "\"and file_id = " + file_id + ";";
+			PreparedStatement pst = con.prepareStatement(l);
+			pst.executeUpdate();
+			
+		} catch(Exception e) {
+
+		}
+	}
+	
+	protected void shareFile(String user_id, int file_id, int state)
+	{
+		try
+		{		
+			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
+			String l;
+			if(state == 1)
+				l = "update jenuage_docs set share=0 where user = \"" + user_id + "\"and file_id = " + file_id + ";";
+			else
+				l = "update jenuage_docs set share=1 where user = \"" + user_id + "\"and file_id = " + file_id + ";";
+			PreparedStatement pst = con.prepareStatement(l);
+			pst.executeUpdate();
+			
+		} catch(Exception e) {
+
+		}
+	}
+	
 }
 
 
