@@ -155,8 +155,7 @@
               </div>
             </div>
             <div class="card-footer text-muted">
-              <input class="btn btn-success" type="submit"
-                value="Access iNuage">
+              <input class="btn btn-success" type="submit" value="Access iNuage">
             </div>
           </form>
         </div>

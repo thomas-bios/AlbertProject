@@ -54,13 +54,24 @@
             <div class="alert alert-danger" role="alert">Please provide a file to upload.</div>
         </c:if>
 
+        <c:if test="${not empty param.status && param.status == '01'}">
+            <div class="alert alert-success" role="alert">Your file was successfully deleted.</div>
+        </c:if>
+
+        <c:if test="${not empty param.status && param.status == '02'}">
+            <div class="alert alert-success" role="alert">Your file was successfully renamed.</div>
+        </c:if>
+        
+        <c:if test="${not empty param.status && param.status == '03'}">
+            <div class="alert alert-success" role="alert">Your file shareability was successfully changed.</div>
+        </c:if>
         <!-- Search results -->
         <c:if test="${not empty param.search}">
 	        <div class="my-3 p-3 rounded shadow-sm">
 	            <h6 class="border-bottom border-gray pb-2 mb-0">Search results</h6>
 	            
                 <sql:query var = "searchResults">
-                    SELECT * from jenuage_docs where name = "${sessionScope.user_id_string}";
+                    SELECT * from jenuage_docs Where name LIKE '%${param.search}%';
                 </sql:query>
 	            
 	            <c:if test="${searchResults.rowCount == 0}">
@@ -75,21 +86,22 @@
 	                                <h6><strong class="text-white">${row.name}</strong></h6>
 	                        
 	                                <div style="text-align: right;"><h5>
-	                                   <a href="iNuage/action?c=down&dname=${row.name}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
+	                                   <a href="iNuage/action?c=down&fid=${row.file_id}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
 	                                   <c:if test="${row.share == 0}">
-	                                       <a href="iNuage/action?c=sha&dname=${row.name}" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
+	                                       <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
 	                                   </c:if>
 	                                   <c:if test="${row.share == 1}">
-	                                       <a href="iNuage/action?c=sha&dname=${row.name}" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
+	                                       <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
 	                                   </c:if>                   
-	                                   <a href="iNuage/action?c=ren&dname=${row.name}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
-	                                   <a href="iNuage/action?c=del&dname=${row.name}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
+	                                   <a href="iNuage?rename=${row.file_id}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
+	                                   <a href="iNuage/action?c=del&fid=${row.file_id}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
 	                                </h5></div>
 	                            </div>
 	                            <span class="d-block">${row.date}</span>
 	                        </div>
 	                    </div>
 	                </c:forEach>
+	                <br>
 	            </c:if>
 	            
 	        </div>
@@ -118,19 +130,37 @@
 	                <div class="media text-muted pt-3">
 	                    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 	                        <div class="d-flex justify-content-between align-items-center w-100">
-	                            <h6><strong class="text-white">${row.name}</strong></h6>
-	                    
-	                            <div style="text-align: right;"><h5>
-		                           <a href="iNuage/action?c=down&dname=${row.name}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
-		                           <c:if test="${row.share == 0}">
-		                               <a href="iNuage/action?c=sha&dname=${row.name}" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
-		                           </c:if>
-		                           <c:if test="${row.share == 1}">
-		                               <a href="iNuage/action?c=sha&dname=${row.name}" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
-		                           </c:if>                   
-								   <a href="iNuage/action?c=ren&fid=${row.name}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
-								   <a href="iNuage/action?c=del&fid=${row.file_id}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
-	                            </h5></div>
+                                <h6><strong class="text-white">${row.name}</strong></h6>
+                                
+                                 <c:if test="${not empty param.rename && param.rename == row.file_id}">	                    
+		                             <form method="get" action="iNuage/action" class="form-inline">
+										<div class="form-group mb-2">
+										  <label for="c" class="sr-only">Action Type</label>
+										  <input type="hidden" readonly class="form-control-plaintext" id="c" value="ren" name="c">
+										  <label for="fid" class="sr-only">File ID</label>
+										  <input type="hidden" readonly class="form-control-plaintext" id="fid" value="${param.rename}" name="fid">
+										</div>
+										<div class="form-group mx-sm-3 mb-2">
+										  <label for="newname" class="sr-only">New Name</label>
+										  <input type="text" class="form-control" id="newname" placeholder="thing.jpg" name="newname">
+										</div>
+	                                    <input type="submit" class="btn btn-primary mb-2" value="Rename">
+	                                </form>
+	                            </c:if>
+
+	                            <c:if test="${empty param.rename}">
+		                            <div style="text-align: right;"><h5>
+			                           <a href="iNuage/action?c=down&fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
+			                           <c:if test="${row.share == 0}">
+			                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
+			                           </c:if>
+			                           <c:if test="${row.share == 1}">
+			                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1" style="color: #4CAA46;" class="tooltip-test" title="Stop sharing"><i class="fas fa-share-alt-square"></i></a>
+			                           </c:if>                   
+	                                   <a href="iNuage?rename=${row.file_id}" style="color: #DCD650;" class="tooltip-test" title="Rename"><i class="fas fa-pen" ></i></a>
+	                                   <a href="iNuage/action?c=del&fid=${row.file_id}" style="color: #B93842;" class="tooltip-test" title="Delete"><i class="fas fa-trash"></i></a>
+		                            </h5></div>
+	                            </c:if>
 	                        </div>
 	                        <span class="d-block">${row.date}</span>
 	                    </div>
@@ -142,8 +172,7 @@
 
 
         <!-- UPLOAD PANEL -->
-        <div class="modal fade" id="uploader" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="uploader" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content bg-dark">
                     <div class="modal-header">
@@ -165,9 +194,8 @@
             </div>
         </div>
         
-        <!-- SEARCH PANNEL -->
-        <div class="modal fade" id="searcher" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- SEARCH PANEL -->
+        <div class="modal fade" id="searcher" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content bg-dark">
                     <div class="modal-header">
@@ -193,9 +221,8 @@
             </div>
         </div>
         
-		<!-- DELETE ACCOUNT PANNEL -->
-		<div class="modal fade" id="accountDeleter" tabindex="-1"
-			role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<!-- DELETE ACCOUNT PANEL -->
+		<div class="modal fade" id="accountDeleter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content bg-dark">
 					<div class="modal-header">
@@ -217,7 +244,7 @@
 	</div>
 </body>
 
-<!-- FOR DISPLAY PURPOSE ONLY -->
+<!-- FOR DISPLAY PURPOSE ONLY // From bootstrap-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
