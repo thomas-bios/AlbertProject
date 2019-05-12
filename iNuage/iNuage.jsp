@@ -128,8 +128,8 @@
 		                           <c:if test="${row.share == 1}">
 		                               <a href="iNuage/action?c=sha&dname=${row.name}" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
 		                           </c:if>                   
-								   <a href="iNuage/action?c=ren&dname=${row.name}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
-								   <a href="iNuage/action?c=del&dname=${row.name}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
+								   <a href="iNuage/action?c=ren&fid=${row.name}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
+								   <a href="iNuage/action?c=del&fid=${row.file_id}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
 	                            </h5></div>
 	                        </div>
 	                        <span class="d-block">${row.date}</span>
@@ -141,7 +141,7 @@
 		<!--------------------->
 
 
-        <!-- UPLOAD PANNEL -->
+        <!-- UPLOAD PANEL -->
         <div class="modal fade" id="uploader" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
