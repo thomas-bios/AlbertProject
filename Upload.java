@@ -6,9 +6,13 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
 
 import iNuage.Sql_id;
 
@@ -38,6 +43,12 @@ public class Upload extends HttpServlet {
 
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
+    	int status = 0;
+    	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+    	Date date = new Date();
+    	HttpSession session = request.getSession();
+    	String user = (String) session.getAttribute("user_id_string");
+    	
         // Create a factory for disk-based file items
         DiskFileItemFactory factory = new DiskFileItemFactory();
 
@@ -51,12 +62,10 @@ public class Upload extends HttpServlet {
 
         // Create a new file upload handler
         ServletFileUpload upload = new ServletFileUpload( factory );
-
-        // Count how many files are uploaded
-        int count = 0;
         
         // The directory we want to save the uploaded files to.
         String fileDir = getServletContext().getRealPath( "/WEB-INF/uploads" );
+        fileDir += "\\" + user;
 
         // Parse the request
         try
@@ -77,30 +86,29 @@ public class Upload extends HttpServlet {
                 	// /var/usr/some/temp/dir/some-file.jpg
                 	// /user/albert/3220/WEB-INF/uploads   some-file.jpg
                 	
+                	
+                	Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
+                	
                     String fileName = (new File( item.getName() )).getName();
-                    File file = new File( fileDir, fileName );
+                    if(fileName.isEmpty())
+                    	throw new Exception("nof");
+                    String newname = dateFormat.format(date) + fileName;
+                    File file = new File( fileDir, newname );
                     item.write( file );
-                    ++count; 
                     
-                    Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
-                	HttpSession session = request.getSession();
-                	String user = (String) session.getAttribute("user_id_string");
-                	
-                	
-                	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                	LocalDate localDate = LocalDate.now();
                 	fileDir = fileDir.replace("\\", "\\\\");
                 	
-                	PrintWriter out = response.getWriter();
-                	out.print("INSERT INTO 'jenuage_docs' VALUES (" + user + ",\""+ dtf.format(localDate) + "\",\"" + fileDir + "\",\"" + fileName + "\",\"0\",\"0\" );");
-                	
-                	PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`) VALUES (" + user + ",\""+ dtf.format(localDate) + "\",\"" + fileDir + "\",\"" + fileName + "\",0,0 );");
+                	PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`) VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "\\\\" + newname + "\",\"" + fileName + "\",0,0 );");
                 	pst.executeUpdate();
                 } 
             }
         }
-        catch (Exception e) {
-			response.sendRedirect(request.getContextPath() + "/iNuage?uploaded=0");	
+        catch (Exception e)
+        {
+        	if(e.getMessage().equals("nof"))
+        		status = 1;
+        	else
+        		status = 2;
 		}	
 
         /*response.setContentType( "text/html" );
@@ -109,7 +117,7 @@ public class Upload extends HttpServlet {
         out.println( "<p>" + count + " file(s) uploaded to " + fileDir );
         out.println( "</body></html>" );*/
         
-        response.sendRedirect(request.getContextPath() + "/iNuage?uploaded=1");
+        response.sendRedirect(request.getContextPath() + "/iNuage?upload=" + status);
     }
 
 }

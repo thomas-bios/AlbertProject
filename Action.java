@@ -37,10 +37,17 @@ public class Action extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/iNuage?status=5");
 				break;
 			case("down"):
-				downloadFile((String)session.getAttribute("user_id_string"),request.getParameter("dname"));
+				downloadFile((String)session.getAttribute("user_id_string"),request.getParameter("fid"));
 				break;
 			case("del"):
-				downloadFile((String)session.getAttribute("user_id_string"),request.getParameter("dname"));
+				removeFile((String)session.getAttribute("user_id_string"),Integer.parseInt(request.getParameter("fid")));
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=01");
+				break;
+			case("sha"):
+				//WIP
+				break;
+			case("ren"):
+				//WIP
 				break;
 		}
 	}
@@ -60,7 +67,7 @@ public class Action extends HttpServlet {
 			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
 			HttpSession session = request.getSession();
 			
-			String l = "delete from jenuage_docs where user_id = \"" + user_id + "\";";
+			String l = "delete from jenuage_docs where user = \"" + user_id + "\";";
 			PreparedStatement pst = con.prepareStatement(l);
 			pst.executeUpdate();
 			
@@ -81,11 +88,22 @@ public class Action extends HttpServlet {
 		return true;
 	}
 	
-	protected boolean removeFile(String user_id, String c ) {
-		
-		return true;
+	protected void removeFile(String user_id, int file_id )
+	{
+		try
+		{		
+			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
+			
+			String l = "delete from jenuage_docs where file_id = " + file_id + ";";
+			PreparedStatement pst = con.prepareStatement(l);
+			pst.executeUpdate();
+			
+		} catch(Exception e) {
+
+		}
 	}
 }
+
 
 
 
