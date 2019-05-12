@@ -2,17 +2,13 @@ package iNuage;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.FileUtils;
 
 import iNuage.Sql_id;
 
@@ -34,11 +30,9 @@ public class Upload extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    protected void doGet( HttpServletRequest request,
-        HttpServletResponse response ) throws ServletException, IOException
+    protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
-        // Redirect the user to the upload form
-        response.sendRedirect( "Upload.html" );
+        response.sendRedirect("iNuage");
     }
 
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
@@ -48,45 +42,25 @@ public class Upload extends HttpServlet {
     	Date date = new Date();
     	HttpSession session = request.getSession();
     	String user = (String) session.getAttribute("user_id_string");
-    	
-        // Create a factory for disk-based file items
         DiskFileItemFactory factory = new DiskFileItemFactory();
-
-        // Configure a repository (to ensure a secure temp location is used)
         ServletContext servletContext = this.getServletConfig().getServletContext();
+        File repository = (File) servletContext.getAttribute( "javax.servlet.context.tempdir" );
         
-        File repository = (File) servletContext
-            .getAttribute( "javax.servlet.context.tempdir" );
-        
-        factory.setRepository( repository );
+        factory.setRepository(repository);
 
-        // Create a new file upload handler
-        ServletFileUpload upload = new ServletFileUpload( factory );
+        ServletFileUpload upload = new ServletFileUpload(factory);
         
-        // The directory we want to save the uploaded files to.
-        String fileDir = getServletContext().getRealPath( "/WEB-INF/uploads" );
+        String fileDir = getServletContext().getRealPath("/WEB-INF/uploads");
         fileDir += "\\" + user;
 
-        // Parse the request
         try
         {
-            List<FileItem> items = upload.parseRequest( request );
+            List<FileItem> items = upload.parseRequest(request);
             
-            for( FileItem item : items )
+            for(FileItem item : items)
             {
-                // If the item is not a form field - meaning it's an uploaded
-                // file, we save it to the target dir
-                if( !item.isFormField() )
-                {
-                    // item.getName() will return the full path of the uploaded
-                    // file, e.g. "C:/My Documents/files/test.txt", but we only
-                    // want the file name part, which is why we first create a
-                    // File object, then use File.getName() to get the file
-                    // name.
-                	// /var/usr/some/temp/dir/some-file.jpg
-                	// /user/albert/3220/WEB-INF/uploads   some-file.jpg
-                	
-                	
+                if(!item.isFormField())
+                {                	
                 	Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
                 	
                     String fileName = (new File( item.getName() )).getName();
@@ -98,6 +72,15 @@ public class Upload extends HttpServlet {
                     
                 	fileDir = fileDir.replace("\\", "\\\\");
                 	
+                	/* CHECK IF EQUALS ANY OTHER FILE ALREADY EXISTING
+                	boolean isTwoEqual = false;
+                	for(String path : ???) {
+                		isTwoEqual = FileUtils.contentEquals(path, item.getName());
+                		if(isTwoEqual)
+                			throw new Exception("exi");
+                	}
+                	*/
+                	
                 	PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`) VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "\\\\" + newname + "\",\"" + fileName + "\",0,0 );");
                 	pst.executeUpdate();
                 } 
@@ -107,15 +90,11 @@ public class Upload extends HttpServlet {
         {
         	if(e.getMessage().equals("nof"))
         		status = 1;
-        	else
+        	else if(e.getMessage().equals("exi"))
+        		status = 3;
+        	else	
         		status = 2;
-		}	
-
-        /*response.setContentType( "text/html" );
-        PrintWriter out = response.getWriter();
-        out.println( "<html><head><title>Upload</title></head><body>" );
-        out.println( "<p>" + count + " file(s) uploaded to " + fileDir );
-        out.println( "</body></html>" );*/
+		}
         
         response.sendRedirect(request.getContextPath() + "/iNuage?upload=" + status);
     }
