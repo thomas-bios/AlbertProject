@@ -1,20 +1,25 @@
 
-Welcome to jeNuage, the new powerful tool to store your files online !
+        Welcome to jeNuage, the new powerful tool to store your files online !
 
 Access them anytime, anywhere !
 
 Just go to www.iNuage.com, login and enjoy !
 
 UPLOAD A FILE:
-    - Select Upload, your file and hit the Confirm button.
+    - Select Upload, your file and hit the green confirm button.
     
 DOWNLOAD A FILE:
-    - Click on the name of the file you want to download.
+    - Click on the blue download icon next to the file name.
     
+SHARE A FILE:
+    - Click on the gray share icon next to the file name. The icon will turn green, and the link to the file will be accessible by all.
+    - To stop sharing, click the icon again, it will turn gray.
+    
+SEARCH FOR A FILE:
+    - Select Search, enter your query and hit Enter.
+
 REMOVE A FILE:
-    - Click the word "Delete" on the right of a file.
+    - Click on the red trash icon next to the file name.
     
 DELETE YOU ACCOUNT:
     - We are sorry to see you leave. Hit the "Delete your account" text, on the bottom-right.
-    
-.....
