@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +26,7 @@ import org.apache.commons.io.FileUtils;
 
 import iNuage.Sql_id;
 
-@WebServlet("/Upload")
+@WebServlet("/iNuage/Upload")
 public class Upload extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -38,6 +39,7 @@ public class Upload extends HttpServlet {
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
     	int status = 0;
+    	
     	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
     	Date date = new Date();
     	HttpSession session = request.getSession();
@@ -72,14 +74,29 @@ public class Upload extends HttpServlet {
                     
                 	fileDir = fileDir.replace("\\", "\\\\");
                 	
-                	/* CHECK IF EQUALS ANY OTHER FILE ALREADY EXISTING
+                	////////////////CHECK IF EQUALS ANY OTHER FILE ALREADY EXISTING 
+                	
+                	PreparedStatement ps = null;
+                	String sql = "SELECT path FROM jenuage_docs";
+                	ps = con.prepareStatement(sql);
+                	ResultSet rs = ps.executeQuery();
+                	
                 	boolean isTwoEqual = false;
-                	for(String path : ???) {
-                		isTwoEqual = FileUtils.contentEquals(path, item.getName());
-                		if(isTwoEqual)
-                			throw new Exception("exi");
-                	}
-                	*/
+                	File newFile = new File(item.getName());
+                	
+                	if(newFile.length() != 0)
+	                	while(rs.next()) 
+	                	{
+	                		isTwoEqual = FileUtils.contentEquals(new File(rs.getString("path")), newFile);
+	                		
+	                		response.getWriter().println(new File(rs.getString("path")).length());
+	                		response.getWriter().println(newFile.length());
+	                		
+	                		if(isTwoEqual)
+	                			throw new Exception("exi");
+	                	} 
+                	
+                	//////////////////////
                 	
                 	PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`) VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "\\\\" + newname + "\",\"" + fileName + "\",0,0 );");
                 	pst.executeUpdate();
@@ -93,7 +110,9 @@ public class Upload extends HttpServlet {
         	else if(e.getMessage().equals("exi"))
         		status = 3;
         	else	
+        	{
         		status = 2;
+        	}
 		}
         
         response.sendRedirect(request.getContextPath() + "/iNuage?upload=" + status);
