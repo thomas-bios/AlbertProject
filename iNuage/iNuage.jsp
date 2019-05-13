@@ -53,6 +53,14 @@
         <c:if test="${not empty param.upload && param.upload == '1'}">
             <div class="alert alert-danger" role="alert">Please provide a file to upload.</div>
         </c:if>
+  
+        <c:if test="${not empty param.upload && param.upload == '2'}">
+            <div class="alert alert-danger" role="alert">Unknown error. Please try again later.</div>
+        </c:if>
+        
+        <c:if test="${not empty param.upload && param.upload == '3'}">
+            <div class="alert alert-danger" role="alert">This file already exist on your iNuage.</div>
+        </c:if>
 
         <c:if test="${not empty param.status && param.status == '01'}">
             <div class="alert alert-success" role="alert">Your file was successfully deleted.</div>
@@ -150,6 +158,7 @@
 
 	                            <c:if test="${empty param.rename}">
 		                            <div style="text-align: right;"><h5>
+		                            ${row.path }
 			                           <a href="iNuage/action?c=down&fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
 			                           <c:if test="${row.share == 0}">
 			                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
@@ -181,7 +190,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="Upload" method="post" enctype="multipart/form-data">
+                    <form action="iNuage/Upload" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
                             <input type="file" name="file"/><br/>  
                         </div>
