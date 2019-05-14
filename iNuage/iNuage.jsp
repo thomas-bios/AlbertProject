@@ -40,7 +40,7 @@
 			<div class="btn-group" role="group" aria-label="First group">
 				<button class="btn btn-secondary" data-toggle="modal" data-target="#uploader">UPLOAD</button>
 				<button class="btn btn-secondary" data-toggle="modal" data-target="#searcher">SEARCH</button>
-				<button type="button" class="btn btn-secondary">NEW DIRECTORY</button>
+				<button class="btn btn-secondary" data-toggle="modal" data-target="#directorer">NEW DIRECTORY</button>
 			</div>
 
 			<a href="iNuage/action?c=logout"><button type="button" class="btn btn-secondary">LOG OUT</button></a>
@@ -221,6 +221,33 @@
                                   <div class="input-group-text">?</div>
                                 </div>
                                 <input type="text" class="form-control" id="inlineFormInputGroup" type="text" required name="search" placeholder="name_of_file.png">
+                              </div>
+                            </div>  
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NEW DIRECTORY PANEL -->
+        <div class="modal fade" id="directorer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Search for a file</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="iNuage/action" method="post">
+                        <div class="modal-body">
+                           <div class="col-auto">
+                              <label class="sr-only" for="inlineFormInputGroup">Name of the new folder</label>
+                              <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">?</div>
+                                </div>
+                                <input type="text" class="form-control" id="inlineFormInputGroup" type="text" required name="dir" placeholder="ULTRA_SECRET_FILES">
                               </div>
                             </div>  
                         </div>
