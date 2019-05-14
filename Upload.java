@@ -1,6 +1,7 @@
 package iNuage;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -75,30 +76,30 @@ public class Upload extends HttpServlet {
                 	fileDir = fileDir.replace("\\", "\\\\");
                 	
                 	////////////////CHECK IF EQUALS ANY OTHER FILE ALREADY EXISTING 
-                	
                 	PreparedStatement ps = null;
-                	String sql = "SELECT path FROM jenuage_docs";
+                	String sql = "SELECT hash FROM jenuage_docs WHERE user = " + user;
                 	ps = con.prepareStatement(sql);
                 	ResultSet rs = ps.executeQuery();
                 	
-                	boolean isTwoEqual = false;
-                	File newFile = new File(item.getName());
+                	byte[] salt = "0".getBytes();
                 	
-                	if(newFile.length() != 0)
-	                	while(rs.next()) 
-	                	{
-	                		isTwoEqual = FileUtils.contentEquals(new File(rs.getString("path")), newFile);
-	                		
-	                		response.getWriter().println(new File(rs.getString("path")).length());
-	                		response.getWriter().println(newFile.length());
-	                		
-	                		if(isTwoEqual)
-	                			throw new Exception("exi");
-	                	} 
+                	FileInputStream fis = new FileInputStream(file);
+                	byte[] data = new byte[(int) file.length()];
+                	fis.read(data);
+                	fis.close();
+
+                	String content = new String(data, "UTF-8");
+                	String hashed = Sql_id.hash(content, salt);
                 	
+                	response.getWriter().println("avant");
+
+                	while(rs.next())
+                		if(rs.getString("hash").equals(hashed))
+                			throw new Exception("exi");
                 	//////////////////////
                 	
-                	PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`) VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "\\\\" + newname + "\",\"" + fileName + "\",0,0 );");
+                	PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`) VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "\\\\" + newname + "\",\"" + fileName + "\",0,0,\"" + hashed + "\");");
+                	response.getWriter().println(pst);
                 	pst.executeUpdate();
                 } 
             }
