@@ -53,7 +53,7 @@ public class Upload extends HttpServlet {
         ServletFileUpload upload = new ServletFileUpload(factory);
         
         String fileDir = getServletContext().getRealPath("/WEB-INF/uploads");
-        fileDir += "\\" + user;
+        fileDir += "/" + user;
 
         try
         {
@@ -71,9 +71,7 @@ public class Upload extends HttpServlet {
                     String newname = dateFormat.format(date) + fileName;
                     File file = new File( fileDir, newname );
                     item.write( file );
-                    
-                	fileDir = fileDir.replace("\\", "\\\\");
-                	
+                  
                 	////////////////CHECK IF EQUALS ANY OTHER FILE ALREADY EXISTING 
                 	PreparedStatement ps = null;
                 	String sql = "SELECT hash FROM jenuage_docs WHERE user = " + user;
@@ -97,7 +95,9 @@ public class Upload extends HttpServlet {
                 			throw new Exception("exi");
                 	//////////////////////
                 	
-                	PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`) VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "\\\\" + newname + "\",\"" + fileName + "\",0,0,\"" + hashed + "\");");
+                	PreparedStatement pst = con.prepareStatement(
+                			"INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`) "
+                			+ "VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "/" + newname + "\",\"" + fileName + "\",0,0,\"" + hashed + "\");");
                 	pst.executeUpdate();
                 } 
             }
