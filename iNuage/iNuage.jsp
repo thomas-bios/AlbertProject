@@ -139,25 +139,29 @@
 		    </c:if>
 		    <c:if test="${empty param.parent}">
                 <sql:query var = "files">
-                    SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}";
+                    SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}" and parent_id = "-1";
                 </sql:query>
             </c:if>
 		    
-	        <c:if test="${files.rowCount == 0}">
-	           <c:if test="${empty param.parent}">
-		            <div class="media text-muted pt-3">
-		                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-		                    <div class="d-flex justify-content-between align-items-center w-100">
-		                        <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New_User_GUIDE.txt</strong></a>
-		                    </div>
-		                    <span class="d-block"> 15 Jun 1987 </span>
-		                </div>
-		            </div>
-                </c:if>
-                <c:if test="${empty param.parent}">
-                    <br><h5> Empty directory </h5>
-                </c:if>
+	        <c:if test="${files.rowCount == 0 && empty param.parent}">
+	            <div class="media text-muted pt-3">
+	                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+	                    <div class="d-flex justify-content-between align-items-center w-100">
+	                        <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New_User_GUIDE.txt</strong></a>
+	                    </div>
+	                    <span class="d-block"> 15 Jun 1987 </span>
+	                </div>
+	            </div>
 	        </c:if>
+	        
+	        <c:if test="${not empty param.parent}">
+	            <sql:query var = "goBack">
+                    SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}" && file_id = "${param.parent}";
+                </sql:query>
+                <c:forEach var="back" items="${goBack.rows}">
+                    <br><h4><a href="iNuage?parent=${back.parent_id}"> .. </a></h4>
+                </c:forEach>
+            </c:if>
 	        
 	        <c:if test="${files.rowCount > 0}">
 	            <c:forEach var="row" items="${files.rows}">
