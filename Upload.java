@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FileUtils;
 
 import iNuage.Sql_id;
 
@@ -99,7 +98,6 @@ public class Upload extends HttpServlet {
                 	//////////////////////
                 	
                 	PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`) VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "\\\\" + newname + "\",\"" + fileName + "\",0,0,\"" + hashed + "\");");
-                	response.getWriter().println(pst);
                 	pst.executeUpdate();
                 } 
             }
