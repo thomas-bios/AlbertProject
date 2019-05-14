@@ -25,12 +25,7 @@ public class Action extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String action = request.getParameter("c");
-		
-		if(action.equals("down")) {
-			downloadFile((int)session.getAttribute("user_id_int"),request.getParameter("fid"));
-			response.sendRedirect(request.getContextPath() + "/iNuage");
-		}
-		
+
 		if(session.getAttribute("user_id_int") == null) {
 			response.sendRedirect(request.getContextPath() + "/iNuage");
 			return;
@@ -66,27 +61,6 @@ public class Action extends HttpServlet {
 	protected boolean logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.invalidate();
-		return true;
-	}
-	
-	protected boolean downloadFile(int user_id, String file_id) {
-		try {
-			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
-			String l = "select * from jenuage_docs where file_id = \"" + file_id + "\";";
-			PreparedStatement pst = con.prepareStatement(l);
-			ResultSet result = pst.executeQuery();
-			
-			if(result.next()) {
-				if(result.getInt(5) == 1 || result.getInt(1)  == user_id) {
-					FileUtils.copyURLToFile(new URL(result.getString(3)), 
-							  new File(result.getString(4)), 10000, 10000);
-				}
-			}
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
 		return true;
 	}
 	
