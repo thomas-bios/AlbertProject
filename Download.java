@@ -74,7 +74,6 @@ public class Download extends HttpServlet {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
-			return;
 		}
 		response.sendRedirect(request.getContextPath() + "/iNuage");
 
