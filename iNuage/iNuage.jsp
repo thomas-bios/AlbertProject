@@ -73,6 +73,10 @@
         <c:if test="${not empty param.status && param.status == '03'}">
             <div class="alert alert-success" role="alert">Your file shareability was successfully changed.</div>
         </c:if>
+        
+        <c:if test="${not empty param.path}">
+            <div class="alert alert-success" role="alert">Your file was successfully downloaded at "${param.path}".</div>
+        </c:if>
         <!-- Search results -->
         <c:if test="${not empty param.search}">
 	        <div class="my-3 p-3 rounded shadow-sm">
@@ -91,19 +95,27 @@
 	                    <div class="media text-muted pt-3">
 	                        <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 	                            <div class="d-flex justify-content-between align-items-center w-100">
-	                                <h6><strong class="text-white">${row.name}</strong></h6>
-	                        
-	                                <div style="text-align: right;"><h5>
-	                                   <a href="iNuage/action?c=down&fid=${row.file_id}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
-	                                   <c:if test="${row.share == 0}">
-	                                       <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
-	                                   </c:if>
-	                                   <c:if test="${row.share == 1}">
-	                                       <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
-	                                   </c:if>                   
-	                                   <a href="iNuage?rename=${row.file_id}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
-	                                   <a href="iNuage/action?c=del&fid=${row.file_id}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
-	                                </h5></div>
+	                                <c:if test="${row.folder == 0}">
+	                                   <h6><strong class="text-white">${row.name}</strong></h6>
+	                                </c:if>
+	                                <c:if test="${row.folder == 1}">
+	                                  <h6><a href="?parent=${row.file_id}"><strong>${row.name}</strong></a></h6>
+	                                </c:if>
+                                    <div style="text-align: right;">
+                                        <h5>
+											<c:if test="${row.folder == 0}">
+												<a href="iNuage/action?c=down&fid=${row.file_id}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
+												<c:if test="${row.share == 0}">
+												    <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
+												</c:if>
+												<c:if test="${row.share == 1}">
+												    <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
+												</c:if>       
+											</c:if>            
+											<a href="iNuage?rename=${row.file_id}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
+											<a href="iNuage/action?c=del&fid=${row.file_id}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
+	                                   </h5>
+	                                </div>
 	                            </div>
 	                            <span class="d-block">${row.date}</span>
 	                        </div>
@@ -120,25 +132,44 @@
             <h6 class="border-bottom border-gray pb-2 mb-0">My Files</h6>
 
 		    <!-- DISPLAY FILES-->
-		    <sql:query var = "files">
-		        SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}";
-		    </sql:query>
+		    <c:if test="${not empty param.parent}">
+			    <sql:query var = "files">
+			        SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}" and parent_id = "${param.parent}";
+			    </sql:query>
+		    </c:if>
+		    <c:if test="${empty param.parent}">
+                <sql:query var = "files">
+                    SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}";
+                </sql:query>
+            </c:if>
+		    
 	        <c:if test="${files.rowCount == 0}">
-	            <div class="media text-muted pt-3">
-	                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-	                    <div class="d-flex justify-content-between align-items-center w-100">
-	                        <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New_User_GUIDE.txt</strong></a>
-	                    </div>
-	                    <span class="d-block"> 15 Jun 1987 </span>
-	                </div>
-	            </div>
+	           <c:if test="${empty param.parent}">
+		            <div class="media text-muted pt-3">
+		                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+		                    <div class="d-flex justify-content-between align-items-center w-100">
+		                        <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New_User_GUIDE.txt</strong></a>
+		                    </div>
+		                    <span class="d-block"> 15 Jun 1987 </span>
+		                </div>
+		            </div>
+                </c:if>
+                <c:if test="${empty param.parent}">
+                    <br><h5> Empty directory </h5>
+                </c:if>
 	        </c:if>
+	        
 	        <c:if test="${files.rowCount > 0}">
 	            <c:forEach var="row" items="${files.rows}">
 	                <div class="media text-muted pt-3">
 	                    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 	                        <div class="d-flex justify-content-between align-items-center w-100">
-                                <h6><strong class="text-white">${row.name}</strong></h6>
+                                <c:if test="${row.folder == 0}">
+                                    <h6><strong class="text-white">${row.name}</strong></h6>
+                                </c:if>
+                                <c:if test="${row.folder == 1}">
+                                    <h6><a href="?parent=${row.file_id}"><strong>${row.name}</strong></a></h6>
+                                </c:if>
                                 
                                  <c:if test="${not empty param.rename && param.rename == row.file_id}">	                    
 		                             <form method="get" action="iNuage/action" class="form-inline">
@@ -158,13 +189,15 @@
 
 	                            <c:if test="${empty param.rename}">
 		                            <div style="text-align: right;"><h5>
-			                           <a href="iNuage/Download?fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
-			                           <c:if test="${row.share == 0}">
-			                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
-			                           </c:if>
-			                           <c:if test="${row.share == 1}">
-			                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1" style="color: #4CAA46;" class="tooltip-test" title="Stop sharing"><i class="fas fa-share-alt-square"></i></a>
-			                           </c:if>                   
+                                        <c:if test="${row.folder == 0}">
+				                           <a href="iNuage/Download?fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
+				                           <c:if test="${row.share == 0}">
+				                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
+				                           </c:if>
+				                           <c:if test="${row.share == 1}">
+				                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1" style="color: #4CAA46;" class="tooltip-test" title="Stop sharing"><i class="fas fa-share-alt-square"></i></a>
+				                           </c:if>      
+                                        </c:if>             
 	                                   <a href="iNuage?rename=${row.file_id}" style="color: #DCD650;" class="tooltip-test" title="Rename"><i class="fas fa-pen" ></i></a>
 	                                   <a href="iNuage/action?c=del&fid=${row.file_id}" style="color: #B93842;" class="tooltip-test" title="Delete"><i class="fas fa-trash"></i></a>
 		                            </h5></div>
@@ -247,6 +280,13 @@
                                 <div class="input-group-prepend">
                                   <div class="input-group-text">?</div>
                                 </div>
+                                <c:if test="${empty param.location}">
+                                    <input type="hidden" readonly value="-1" name="parent">
+                                </c:if>
+                                <c:if test="${not empty param.location}">
+                                    <input type="hidden" readonly value="${param.location}" name="parent">
+                                </c:if>
+                                <input type="hidden" readonly value="folder" name="c">
                                 <input type="text" class="form-control" id="inlineFormInputGroup" type="text" required name="dir" placeholder="ULTRA_SECRET_FILES">
                               </div>
                             </div>  
