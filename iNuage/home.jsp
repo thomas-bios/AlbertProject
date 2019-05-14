@@ -18,14 +18,6 @@
       font-weight: bold;
     }
     
-    .card-header-icons>a:link, .card-header-icons>a:visited {
-      color: gray;
-    }
-    
-    .card-header-icons>a:hover {
-      color: red;
-    }
-    
     .card-body {
       background-color: #434343
     }

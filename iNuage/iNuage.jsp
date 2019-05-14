@@ -158,8 +158,7 @@
 
 	                            <c:if test="${empty param.rename}">
 		                            <div style="text-align: right;"><h5>
-		                            ${row.path }
-			                           <a href="iNuage/action?c=down&fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
+			                           <a href="iNuage/Download?fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
 			                           <c:if test="${row.share == 0}">
 			                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
 			                           </c:if>
