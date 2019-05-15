@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,6 +52,10 @@ public class Action extends HttpServlet {
 				renameFile((String)session.getAttribute("user_id_string"),Integer.parseInt(request.getParameter("fid")),request.getParameter("newname"));
 				response.sendRedirect(request.getContextPath() + "/iNuage?status=02");
 				break;
+			case("folder"):
+				createFolder(request, response);
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=06");
+				break;
 		}
 	}
 
@@ -59,6 +68,40 @@ public class Action extends HttpServlet {
 		session.invalidate();
 		return true;
 	}
+	
+	protected void createFolder(HttpServletRequest request, HttpServletResponse response){
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+    	Date date = new Date();
+    	HttpSession session = request.getSession();
+    	String user = (String) session.getAttribute("user_id_string");
+    	Connection con;
+		try {
+			con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
+	    	String dir = request.getParameter("dir");
+	    	String parent = request.getParameter("parent");
+	    	
+	    	PreparedStatement ps = null;
+	    	String sql = "SELECT hash FROM jenuage_docs WHERE user = " + user;
+        	ps = con.prepareStatement(sql);
+        	ResultSet rs = ps.executeQuery();
+	    	
+			byte[] salt = "0".getBytes();
+			String hashed = Sql_id.hash(dir, salt);
+			
+			while(rs.next())
+        		if(rs.getString("hash").equals(hashed))
+        			throw new Exception("exi");
+			
+			PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`, `parent_id`) "
+				+ "VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"\",\"" + dir + "\",0,1,\"" + hashed + "\"," + parent + ");");
+			pst.executeUpdate();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
+    }
+ 
 	
 	protected boolean deleteAccount(String user_id,HttpServletRequest request) {
 		try {		
