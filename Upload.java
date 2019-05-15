@@ -33,12 +33,14 @@ public class Upload extends HttpServlet {
 
     protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
-        response.sendRedirect("iNuage");
+        //response.sendRedirect("iNuage");
+    	doPost(request,response);
     }
 
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
     	int status = 0;
+    	String parent = "";
     	
     	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
     	Date date = new Date();
@@ -53,7 +55,7 @@ public class Upload extends HttpServlet {
         ServletFileUpload upload = new ServletFileUpload(factory);
         
         String fileDir = getServletContext().getRealPath("/WEB-INF/uploads");
-        fileDir += "/" + user;
+   //     fileDir += "/" + user;
 
         try
         {
@@ -87,19 +89,19 @@ public class Upload extends HttpServlet {
 
                 	String content = new String(data, "UTF-8");
                 	String hashed = Sql_id.hash(content, salt);
-                	
-                	response.getWriter().println("avant");
 
                 	while(rs.next())
                 		if(rs.getString("hash").equals(hashed))
                 			throw new Exception("exi");
                 	//////////////////////
                 	
+                	parent = request.getParameter("parent").isEmpty() ? "-1" : request.getParameter("parent");
+                	                	
                 	PreparedStatement pst = con.prepareStatement(
-                			"INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`) "
-                			+ "VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "/" + newname + "\",\"" + fileName + "\",0,0,\"" + hashed + "\");");
+                			"INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`, `parent_id`) "
+                			+ "VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "/" + newname + "\",\"" + fileName + "\",0,0,\"" + hashed + "\"," + parent + ");");
                 	pst.executeUpdate();
-                } 
+                }
             }
         }
         catch (Exception e)
@@ -112,9 +114,11 @@ public class Upload extends HttpServlet {
         	{
         		status = 2;
         	}
+        	
+        	response.getWriter().println(e.getMessage());
 		}
         
-        response.sendRedirect(request.getContextPath() + "/iNuage?upload=" + status);
+        response.sendRedirect(request.getContextPath() + "/iNuage?upload=" + status + "&parent=" + parent);
     }
 
 }

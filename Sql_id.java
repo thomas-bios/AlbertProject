@@ -23,7 +23,7 @@ public class Sql_id {
         byte[] salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(saltLen);
         return Base64.getEncoder().encodeToString(salt) + "$" + hash(password, salt);
     }
-    private static String hash(String password, byte[] salt) throws Exception {
+    public static String hash(String password, byte[] salt) throws Exception {
         if (password == null || password.length() == 0)
             throw new IllegalArgumentException("Empty passwords are not supported.");
         SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -32,4 +32,3 @@ public class Sql_id {
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 }
-
