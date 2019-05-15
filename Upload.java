@@ -33,7 +33,6 @@ public class Upload extends HttpServlet {
 
     protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
     {
-        //response.sendRedirect("iNuage");
     	doPost(request,response);
     }
 
@@ -55,7 +54,6 @@ public class Upload extends HttpServlet {
         ServletFileUpload upload = new ServletFileUpload(factory);
         
         String fileDir = getServletContext().getRealPath("/WEB-INF/uploads");
-   //     fileDir += "/" + user;
 
         try
         {
