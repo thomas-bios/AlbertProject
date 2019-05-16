@@ -19,18 +19,22 @@ import java.util.Date;
 import iNuage.Sql_id;
 
 @WebServlet(name = "Action", urlPatterns = { "/iNuage/action" })
-public class Action extends HttpServlet {
+public class Action extends HttpServlet
+{
 	private static final long serialVersionUID = 1L;
        
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		HttpSession session = request.getSession();
 		String action = request.getParameter("c");
 
-		if(session.getAttribute("user_id_int") == null) {
+		if(session.getAttribute("user_id_int") == null)
+		{
 			response.sendRedirect(request.getContextPath() + "/iNuage");
 			return;
 		}
-		switch(action) {
+		switch(action)
+		{
 			case("logout"):
 				logout(request);
 				response.sendRedirect(request.getContextPath() + "/iNuage?status=4");
@@ -48,11 +52,13 @@ public class Action extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/iNuage?status=69&parent=" + request.getParameter("parent"));
 				break;
 			case("ren"):
-				renameFile((String)session.getAttribute("user_id_string"),Integer.parseInt(request.getParameter("fid")),request.getParameter("newname"));
-				response.sendRedirect(request.getContextPath() + "/iNuage?status=02&parent=" + request.getParameter("parent"));
+				if(rename((String)session.getAttribute("user_id_string"),Integer.parseInt(request.getParameter("fid")),request.getParameter("newname"),request.getParameter("parent"),Integer.parseInt(request.getParameter("isf"))))
+					response.sendRedirect(request.getContextPath() + "/iNuage?status=02&parent=" + request.getParameter("parent"));
+				else
+					response.sendRedirect(request.getContextPath() + "/iNuage?status=42&parent=" + request.getParameter("parent"));
 				break;
 			case("folder"):
-				if(createFolder(request, response))
+				if(createFolder(request))
 					response.sendRedirect(request.getContextPath() + "/iNuage?status=04&parent=" + request.getParameter("parent"));
 				else
 					response.sendRedirect(request.getContextPath() + "/iNuage?status=31&parent=" + request.getParameter("parent"));
@@ -62,17 +68,20 @@ public class Action extends HttpServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		doGet(request, response);
 	}
 
-	protected boolean logout(HttpServletRequest request) {
+	protected boolean logout(HttpServletRequest request)
+	{
 		HttpSession session = request.getSession();
 		session.invalidate();
 		return true;
 	}
 	
-	protected void deleteAccount(String user_id,HttpServletRequest request) {
+	protected void deleteAccount(String user_id,HttpServletRequest request)
+	{
 		try {		
 			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
 			HttpSession session = request.getSession();
@@ -113,18 +122,30 @@ public class Action extends HttpServlet {
 		} catch(Exception e) {}
 	}
 	
-	protected void renameFile(String user_id, int file_id, String newname){
+	protected boolean rename(String user_id, int file_id, String newname, String parent, int isf)
+	{
 		try	{		
 			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
-			
-			String l = "update jenuage_docs set name=\"" + newname + "\" where user = \"" + user_id + "\"and file_id = " + file_id + ";";
-			PreparedStatement pst = con.prepareStatement(l);
+			String l;
+			PreparedStatement pst;
+			if(isf == 1)
+			{
+			l = "SELECT name FROM jenuage_docs WHERE user = " + user_id + " and parent_id = " + parent + " and name = \"" + newname + "\" and folder = 1;";
+			pst = con.prepareStatement(l);
+			ResultSet result = pst.executeQuery();
+			if(result.next())
+				return false;
+			}
+			l = "update jenuage_docs set name=\"" + newname + "\" where user = \"" + user_id + "\"and file_id = " + file_id + ";";
+			pst = con.prepareStatement(l);
 			pst.executeUpdate();
 			
 		} catch(Exception e) {}
+		return true;
 	}
 	
-	protected void shareFile(String user_id, int file_id, int state){
+	protected void shareFile(String user_id, int file_id, int state)
+	{
 		try	{		
 			Connection con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
 			String l;
@@ -137,7 +158,9 @@ public class Action extends HttpServlet {
 			
 		} catch(Exception e) {}
 	}
-	protected boolean createFolder(HttpServletRequest request, HttpServletResponse response){
+	
+	protected boolean createFolder(HttpServletRequest request)
+	{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
     	Date date = new Date();
     	HttpSession session = request.getSession();
@@ -146,10 +169,10 @@ public class Action extends HttpServlet {
 		try {
 			con = DriverManager.getConnection(Sql_id.connection, Sql_id.user, Sql_id.password);
 	    	String dir = request.getParameter("dir");
-	    	String parent = request.getParameter("parent");
+	    	String parent = request.getParameter("parent").equals("") ? "-1" : request.getParameter("parent");
 
 	    	PreparedStatement ps = null;
-	    	String sql = "SELECT hash FROM jenuage_docs WHERE user = " + user;
+	    	String sql = "SELECT name FROM jenuage_docs WHERE user = " + user + " and parent_id = " + parent + ";";
         	ps = con.prepareStatement(sql);
         	ResultSet rs = ps.executeQuery();
 
@@ -157,7 +180,7 @@ public class Action extends HttpServlet {
 			String hashed = Sql_id.hash(dir, salt);
 
 			while(rs.next())
-        		if(rs.getString("hash").equals(hashed))
+        		if(rs.getString("name").equals(dir))
         			return false;
 
 			PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`, `parent_id`) "

@@ -47,7 +47,7 @@
 		</div>
 
 		<c:if test="${not empty param.upload && param.upload == '0'}">
-			<div class="alert alert-success" role="alert">Your file was successfully uploaded.
+			<div class="alert alert-success" role="alert">Your file has been successfully saved to our secure state drives (SSD).
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X </a>
             </div>
 		</c:if>
@@ -59,7 +59,13 @@
         </c:if>
   
         <c:if test="${not empty param.upload && param.upload == '2'}">
-            <div class="alert alert-danger" role="alert">The server has encountered a fatal error and died. YOU KILLED HIM!
+            <div class="alert alert-danger" role="alert">The server has encountered a fatal error and died.
+                <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> <strong>X to doubt</strong> </a>
+            </div>
+        </c:if>
+        
+        <c:if test="${not empty param.status && param.status == '42'}">
+            <div class="alert alert-warning" role="alert">Can’t rename thing, thingname already exists.
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X </a>
             </div>
         </c:if>
@@ -71,25 +77,25 @@
         </c:if>
 
         <c:if test="${not empty param.status && param.status == '01'}">
-            <div class="alert alert-success" role="alert">Your thing was successfully deleted.
+            <div class="alert alert-success" role="alert">Your thing's been successfully deleted.
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X </a>
             </div>
         </c:if>
         
         <c:if test="${not empty param.status && param.status == '02'}">
-            <div class="alert alert-success" role="alert">Your file was successfully renamed.
+            <div class="alert alert-success" role="alert">Your file's been successfully renamed.
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X</a>
             </div>
         </c:if>
         
         <c:if test="${not empty param.status && param.status == '69'}">
-            <div class="alert alert-success" role="alert">Your file shareability was successfully changed.
+            <div class="alert alert-success" role="alert">Your file shareability has been successfully changed.
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X </a>
             </div>
         </c:if>
         
         <c:if test="${not empty param.status && param.status == '04'}">
-            <div class="alert alert-success" role="alert">Your folder was successfully created.
+            <div class="alert alert-success" role="alert">Your folder has been successfully created.
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X </a>
             </div>
         </c:if>
@@ -101,7 +107,7 @@
         </c:if>
         
         <c:if test="${not empty param.path}">
-            <div class="alert alert-success" role="alert">Your file was successfully downloaded at "${param.path}".
+            <div class="alert alert-success" role="alert">Your file has been successfully downloaded at "${param.path}".
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X </a>
             </div>
         </c:if>
@@ -176,9 +182,9 @@
 	            <div class="media text-muted pt-3">
 	                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 	                    <div class="d-flex justify-content-between align-items-center w-100">
-	                        <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New_User_GUIDE.txt</strong></a>
+	                        <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New User GUIDE</strong></a>
 	                    </div>
-	                    <span class="d-block"> 15 Jun 1987 </span>
+	                    <span class="d-block"> From iNuage's Devs </span>
 	                </div>
 	            </div>
 	        </c:if>
@@ -195,7 +201,8 @@
                     </sql:query>
                 </c:if>
                 <c:forEach var="back" items="${goBack.rows}">
-                    <br><h4><a href="iNuage?parent=${back.parent_id}"> .. </a></h4>
+                    <br>
+                    <h4><a href="iNuage?parent=${back.parent_id}"> .. </a></h4>
                 </c:forEach>
             </c:if>
 	        
@@ -214,11 +221,10 @@
                                  <c:if test="${not empty param.rename && param.rename == row.file_id}">	                    
 		                             <form method="get" action="iNuage/action" class="form-inline">
 										<div class="form-group mb-2">
-										  <label for="c" class="sr-only">Action Type</label>
-										  <input type="hidden" readonly id="c" value="ren" name="c">
-										  <label for="fid" class="sr-only">File ID</label>
-										  <input type="hidden" readonly id="fid" value="${param.rename}" name="fid">
+										  <input type="hidden" readonly value="ren" name="c">
+										  <input type="hidden" readonly value="${param.rename}" name="fid">
 										  <input type="hidden" readonly value="${param.parent}" name="parent">
+										  <input type="hidden" readonly value="${row.folder}" name="isf">
 										</div>
 										<div class="form-group mx-sm-3 mb-2">
 										  <label for="newname" class="sr-only">New Name</label>
@@ -343,21 +349,46 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content bg-dark">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Au revoir... ;(</h5>
+						<h5 class="modal-title" id="exampleModalLabel">Surely, it's wrong !</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">Are you sure you want to permanently delete your iNuage account ?</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+						<button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">No</button>
 						<a href="iNuage/action?c=delete"><button type="button" class="btn btn-success">Yes</button></a>
 					</div>
 				</div>
 			</div>
 		</div>
+		
+		<!-- CREDIT PANEL -->		
+		<div class="modal fade" id="crediter" tabindex="-1" role="dialog" aria-labelledby=exampleModalLabel aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Welcome to the credits!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>iNuage's Team:</strong></p>
+                        <p>- Thomas ALIA (<a href="https://github.com/thomas-bios">GitHub</a>)</p>
+                        <p>- Valérian FAYT (<a href="https://github.com/Nickname666">GitHub</a>)</p>
+                        <p>- Philippe QIAO (<a href="https://github.com/Intersideral">GitHub</a>)</p>
+                        <p>- Corentin LEFEVRE-PONTALIS (<a href="https://github.com/Pepit0Mc">GitHub</a>)</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+		</div>
 
 		<small class="d-block text-right mt-3" data-toggle="modal" data-target="#accountDeleter" style="cursor: pointer; color: #0376D1;">Delete Account</small>
+		<small class="d-block text-right mt-3" data-toggle="modal" data-target="#crediter" style="cursor: pointer; color: #0376D1;">CREDITS</small>
 	</div>
 </body>
 

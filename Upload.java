@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
 
 import iNuage.Sql_id;
 
@@ -96,8 +97,8 @@ public class Upload extends HttpServlet {
                 	parent = request.getParameter("parent").isEmpty() ? "-1" : request.getParameter("parent");
                 	                	
                 	PreparedStatement pst = con.prepareStatement(
-                			"INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`, `parent_id`) "
-                			+ "VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "/" + newname + "\",\"" + fileName + "\",0,0,\"" + hashed + "\"," + parent + ");");
+                			"INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`, `parent_id`, `ext`) "
+                			+ "VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"" + fileDir + "/" + newname + "\",\"" + fileName + "\",0,0,\"" + hashed + "\"," + parent + ",\"" + FilenameUtils.getExtension(fileName) + "\");");
                 	pst.executeUpdate();
                 }
             }
