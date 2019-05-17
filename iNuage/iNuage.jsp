@@ -17,7 +17,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>iNuage</title>
+	<title>iNuage </title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 	<style>
@@ -111,6 +111,7 @@
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X </a>
             </div>
         </c:if>
+
         <!-- Search results -->
         <c:if test="${not empty param.search}">
 	        <div class="my-3 p-3 rounded shadow-sm">
@@ -143,6 +144,7 @@
 												    <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0&parent=${param.parent}" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
 												</c:if>
 												<c:if test="${row.share == 1}">
+												    <a href="iNuage?link=${row.file_id}&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-link"></i></a>
 												    <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
 												</c:if>       
 											</c:if>            
@@ -233,8 +235,16 @@
 	                                    <input type="submit" class="btn btn-primary mb-2" value="Rename">
 	                                </form>
 	                            </c:if>
+	                            
+	                            <c:if test="${not empty param.link && param.link == row.file_id}">                        
+                                        <div class="form-group mb-2">
+                                        </div>
+                                        <div class="form-group mx-sm-3 mb-2">
+                                          <input type="text" class="form-control" readonly id="newname" value="iNuage/Download?fid=${row.file_id}">
+                                        </div>
+                                </c:if>
 
-	                            <c:if test="${empty param.rename}">
+	                            <c:if test="${(empty param.rename && empty param.link) || (not empty param.link && param.link != row.file_id) || not empty param.rename && param.rename != row.file_id}">
 		                            <div style="text-align: right;"><h5>
                                         <c:if test="${row.folder == 0}">
 				                           <a href="iNuage/Download?fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
@@ -242,6 +252,7 @@
 				                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0&parent=${param.parent}" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
 				                           </c:if>
 				                           <c:if test="${row.share == 1}">
+				                               <a href="iNuage?link=${row.file_id}&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-link"></i></a>
 				                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1&parent=${param.parent}" style="color: #4CAA46;" class="tooltip-test" title="Stop sharing"><i class="fas fa-share-alt-square"></i></a>
 				                           </c:if>      
                                         </c:if>             
