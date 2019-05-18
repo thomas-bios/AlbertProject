@@ -139,7 +139,7 @@
                                     <div style="text-align: right;">
                                         <h5>
                                             <c:if test="${row.folder == 0}">
-                                                <a href="iNuage/action?c=down&fid=${row.file_id}&parent=${param.parent}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
+                                                <a href="iNuage/Download?fid=${row.file_id}&parent=${param.parent}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
                                                 <c:if test="${row.share == 0}">
                                                     <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0&parent=${param.parent}" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
                                                 </c:if>
@@ -247,7 +247,7 @@
                                 <c:if test="${(empty param.rename && empty param.link) || (not empty param.link && param.link != row.file_id) || not empty param.rename && param.rename != row.file_id}">
                                     <div style="text-align: right;"><h5>
                                         <c:if test="${row.folder == 0}">
-                                           <a href="iNuage/Download?fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
+                                           <a href="iNuage/Download?fid=${row.file_id}&parent=${param.parent}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
                                            <c:if test="${row.share == 0}">
                                                <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0&parent=${param.parent}" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
                                            </c:if>
