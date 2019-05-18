@@ -90,7 +90,7 @@
          
          <c:if test="${not empty param.status && param.status == '4'}">
              <div class="card bg-warning">
-                 <div class="card-header">LOGED OUT</div>
+                 <div class="card-header">LOGGED OUT</div>
                  <div class="card-body">
                      <p class="card-text">You have been successfully logged out of iNuage.</p>
                  </div>

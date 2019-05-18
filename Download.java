@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 
 
 @WebServlet("/iNuage/Download")
@@ -36,9 +34,8 @@ public class Download extends HttpServlet {
 			
 			
 			if(result.next()) {
-				if(result.getInt("share") == 1 || (user_id != -1 && result.getInt("user")  == user_id)) {
-										
-					//if in serv
+				if(result.getInt("share") == 1 || (user_id != -1 && result.getInt("user") == user_id))
+				{
 					String url = result.getString("path").replace("\\","/");
 					String fileServName = url.substring(url.lastIndexOf("/") + 1).trim();
 					String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/uploads/");
@@ -50,40 +47,28 @@ public class Download extends HttpServlet {
 			        else
 			        	resultName = result.getString("name") + "." + result.getString("ext");
 
-		         // obtains ServletContext
 		            ServletContext context = getServletContext();
 		             
 		            // gets MIME type of the file
 		            String mimeType = context.getMimeType(resultName);
 		            response.setContentType(mimeType);
 
-		         // force download
-		            response.setHeader("Content-Disposition", "attachment; filename=" + resultName);
-		            // obtains response's output stream
-		            
+		            response.setHeader("Content-Disposition", "attachment; filename=" + resultName);            
 		            Files.copy(file, response.getOutputStream());
 	                response.getOutputStream().flush();
-		             
-
-		            
-		    		//response.getWriter().append(TEST);
-
-					//response.sendRedirect(request.getContextPath() + "/iNuage?path=");
 					return;
 				} else {
 					request.getRequestDispatcher("unauthorized.jsp").forward(request, response);
 					return;
 				}
-			}else {
+			} else {
 				response.sendRedirect(request.getContextPath() + "/iNuage?status=32");
 				return;
 			}
 		
-		}catch(Exception e) {
-			response.sendRedirect(request.getContextPath() + "/iNuage?error=" + e.getMessage());
+		} catch(Exception e) {
+			response.sendRedirect(request.getContextPath() + "/iNuage?status=33");
 		}
-		//response.sendRedirect(request.getContextPath() + "/iNuage");
-
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
