@@ -74,6 +74,9 @@ public class Download extends HttpServlet {
 					request.getRequestDispatcher("unauthorized.jsp").forward(request, response);
 					return;
 				}
+			}else {
+				response.sendRedirect(request.getContextPath() + "/iNuage?status=32");
+				return;
 			}
 		
 		}catch(Exception e) {
