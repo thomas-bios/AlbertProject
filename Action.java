@@ -183,8 +183,8 @@ public class Action extends HttpServlet
         		if(rs.getString("name").equals(dir))
         			return false;
 
-			PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`, `share`, `folder`, `hash`, `parent_id`) "
-				+ "VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"\",\"" + dir + "\",0,1,\"" + hashed + "\"," + parent + ");");
+			PreparedStatement pst = con.prepareStatement("INSERT INTO `jenuage_docs` (`user`, `date`, `path`, `name`,`ext`, `share`, `folder`, `hash`, `parent_id`) "
+				+ "VALUES (" + user + ",\"" + dateFormat.format(date) + "\",\"\",\"" + dir + "\",\"\",0,1,\"" + hashed + "\"," + parent + ");");
 			pst.executeUpdate();
 		} catch (Exception e) {}
 		return true;
