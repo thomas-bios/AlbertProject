@@ -10,47 +10,47 @@
   password="TZ*JTLXb"/>
 
 <c:if test="${sessionScope.user_id_string == null}">
-	<jsp:forward page="home.jsp" />
+    <jsp:forward page="home.jsp" />
 </c:if>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>iNuage </title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-	<style>
-		a:link, a:visited {
-			text-decoration: none;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <title>iNuage </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <style>
+        a:link, a:visited {
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body style="background-color: #303030; color: #D3D3D3;">
-	<div class="container">
-		<div class="jumbotron jumbotron-fluid bg-dark">
-			<div class="container">
-				<h1 class="display-4"><a href="iNuage?parent=-1" style="text-decoration: false;">iNuage</a></h1>
-				<p class="lead">Welcome <strong style="color: #FCFD5F;">${sessionScope.user_name_string}</strong>, this is your online iNuage repository</p>
-			</div>
-		</div>
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid bg-dark">
+            <div class="container">
+                <h1 class="display-4"><a href="iNuage?parent=-1" style="text-decoration: false;">iNuage</a></h1>
+                <p class="lead">Welcome <strong style="color: #FCFD5F;">${sessionScope.user_name_string}</strong>, this is your online iNuage repository</p>
+            </div>
+        </div>
 
-		<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-			<div class="btn-group" role="group" aria-label="First group">
-				<button class="btn btn-secondary" data-toggle="modal" data-target="#uploader">UPLOAD</button>
-				<button class="btn btn-secondary" data-toggle="modal" data-target="#searcher">SEARCH</button>
-				<button class="btn btn-secondary" data-toggle="modal" data-target="#directorer">NEW DIRECTORY</button>
-			</div>
+        <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group" role="group" aria-label="First group">
+                <button class="btn btn-secondary" data-toggle="modal" data-target="#uploader">UPLOAD</button>
+                <button class="btn btn-secondary" data-toggle="modal" data-target="#searcher">SEARCH</button>
+                <button class="btn btn-secondary" data-toggle="modal" data-target="#directorer">NEW DIRECTORY</button>
+            </div>
 
-			<a href="iNuage/action?c=logout"><button type="button" class="btn btn-secondary">LOG OUT</button></a>
-		</div>
+            <a href="iNuage/action?c=logout"><button type="button" class="btn btn-secondary">LOG OUT</button></a>
+        </div>
 
-		<c:if test="${not empty param.upload && param.upload == '0'}">
-			<div class="alert alert-success" role="alert">Your file has been successfully saved to our secure state drives (SSD).
+        <c:if test="${not empty param.upload && param.upload == '0'}">
+            <div class="alert alert-success" role="alert">Your file has been successfully saved to our secure state drives (SSD).
                 <a href="iNuage?parent=${param.parent}" style="float: right; color: black;"> X </a>
             </div>
-		</c:if>
+        </c:if>
 
         <c:if test="${not empty param.upload && param.upload == '1'}">
             <div class="alert alert-danger" role="alert">Please provide a file to upload.
@@ -114,88 +114,88 @@
 
         <!-- Search results -->
         <c:if test="${not empty param.search}">
-	        <div class="my-3 p-3 rounded shadow-sm">
-	            <h6 class="border-bottom border-gray pb-2 mb-0">Search results</h6>
-	            
+            <div class="my-3 p-3 rounded shadow-sm">
+                <h6 class="border-bottom border-gray pb-2 mb-0">Search results</h6>
+                
                 <sql:query var = "searchResults">
                     SELECT * from jenuage_docs Where name LIKE '%${param.search}%';
                 </sql:query>
-	            
-	            <c:if test="${searchResults.rowCount == 0}">
+                
+                <c:if test="${searchResults.rowCount == 0}">
                     <br><h5> Your search <strong style="color: #FCFD5F;">- ${param.search} -</strong> did not match any documents. </h5>
-	            </c:if>
-	            
-	            <c:if test="${searchResults.rowCount > 0}">
-		            <c:forEach var="row" items="${searchResults.rows}">
-	                    <div class="media text-muted pt-3">
-	                        <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-	                            <div class="d-flex justify-content-between align-items-center w-100">
-	                                <c:if test="${row.folder == 0}">
-	                                   <h6><strong class="text-white">${row.name}</strong></h6>
-	                                </c:if>
-	                                <c:if test="${row.folder == 1}">
-	                                  <h6><a href="?parent=${row.file_id}"><strong>${row.name}</strong></a></h6>
-	                                </c:if>
+                </c:if>
+                
+                <c:if test="${searchResults.rowCount > 0}">
+                    <c:forEach var="row" items="${searchResults.rows}">
+                        <div class="media text-muted pt-3">
+                            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    <c:if test="${row.folder == 0}">
+                                       <h6><strong class="text-white">${row.name}</strong></h6>
+                                    </c:if>
+                                    <c:if test="${row.folder == 1}">
+                                      <h6><a href="?parent=${row.file_id}"><strong>${row.name}</strong></a></h6>
+                                    </c:if>
                                     <div style="text-align: right;">
                                         <h5>
-											<c:if test="${row.folder == 0}">
-												<a href="iNuage/action?c=down&fid=${row.file_id}&parent=${param.parent}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
-												<c:if test="${row.share == 0}">
-												    <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0&parent=${param.parent}" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
-												</c:if>
-												<c:if test="${row.share == 1}">
-												    <a href="iNuage?link=${row.file_id}&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-link"></i></a>
-												    <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
-												</c:if>       
-											</c:if>            
-											<a href="iNuage?rename=${row.file_id}&parent=${param.parent}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
-											<a href="iNuage/action?c=del&fid=${row.file_id}&parent=${param.parent}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
-	                                   </h5>
-	                                </div>
-	                            </div>
-	                            <span class="d-block">${row.date}</span>
-	                        </div>
-	                    </div>
-	                </c:forEach>
-	                <br>
-	            </c:if>
-	            
-	        </div>
+                                            <c:if test="${row.folder == 0}">
+                                                <a href="iNuage/action?c=down&fid=${row.file_id}&parent=${param.parent}" style="color: #3F6CDE;"><i class="fas fa-download"></i></a>
+                                                <c:if test="${row.share == 0}">
+                                                    <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0&parent=${param.parent}" style="color: #CCCCCC;"><i class="fas fa-share-alt-square"></i></a>
+                                                </c:if>
+                                                <c:if test="${row.share == 1}">
+                                                    <a href="iNuage?link=${row.file_id}&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-link"></i></a>
+                                                    <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-share-alt-square"></i></a>
+                                                </c:if>       
+                                            </c:if>            
+                                            <a href="iNuage?rename=${row.file_id}&parent=${param.parent}" style="color: #DCD650;"><i class="fas fa-pen" ></i></a>
+                                            <a href="iNuage/action?c=del&fid=${row.file_id}&parent=${param.parent}" style="color: #B93842;"><i class="fas fa-trash"></i></a>
+                                       </h5>
+                                    </div>
+                                </div>
+                                <span class="d-block">${row.date}</span>
+                            </div>
+                        </div>
+                    </c:forEach>
+                    <br>
+                </c:if>
+                
+            </div>
         </c:if>
         
-		<!-- Available files -->
+        <!-- Available files -->
         <div class="my-3 p-3 rounded shadow-sm">
             <h6 class="border-bottom border-gray pb-2 mb-0">My Files</h6>
 
-		    <!-- DISPLAY FILES-->
-		    <c:if test="${not empty param.parent}">
-			    <sql:query var = "files">
-			        SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}" and parent_id = "${param.parent}";
-			    </sql:query>
-		    </c:if>
-		    
-		   <c:if test="${(not empty param.parent && param.parent == null) || empty param.parent}">
+            <!-- DISPLAY FILES-->
+            <c:if test="${not empty param.parent}">
+                <sql:query var = "files">
+                    SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}" and parent_id = "${param.parent}";
+                </sql:query>
+            </c:if>
+            
+           <c:if test="${(not empty param.parent && param.parent == null) || empty param.parent}">
                 <sql:query var = "files">
                     SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}" and parent_id = "-1";
                 </sql:query>
             </c:if>
-		    
-	        <c:if test="${files.rowCount == 0 && empty param.parent}">
-	            <div class="media text-muted pt-3">
-	                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-	                    <div class="d-flex justify-content-between align-items-center w-100">
-	                        <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New User GUIDE</strong></a>
-	                    </div>
-	                    <span class="d-block"> From iNuage's Devs </span>
-	                </div>
-	            </div>
-	        </c:if>
-	        
-	        <c:if test="${not empty param.parent}">
-	           <c:if test="${param.parent == null}">
-		            <sql:query var = "goBack">
-	                    SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}" && file_id = "-1";
-	                </sql:query>
+            
+            <c:if test="${files.rowCount == 0 && empty param.parent}">
+                <div class="media text-muted pt-3">
+                    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <a href="iNuage/New_User_GUIDE.txt"><strong class="text-gray-dark">New User GUIDE</strong></a>
+                        </div>
+                        <span class="d-block"> From iNuage's Devs </span>
+                    </div>
+                </div>
+            </c:if>
+            
+            <c:if test="${not empty param.parent}">
+               <c:if test="${param.parent == null}">
+                    <sql:query var = "goBack">
+                        SELECT * from jenuage_docs where user = "${sessionScope.user_id_string}" && file_id = "-1";
+                    </sql:query>
                 </c:if>
                 <c:if test="${param.parent != null}">
                     <sql:query var = "goBack">
@@ -207,12 +207,12 @@
                     <h4><a href="iNuage?parent=${back.parent_id}"> .. </a></h4>
                 </c:forEach>
             </c:if>
-	        
-	        <c:if test="${files.rowCount > 0}">
-	            <c:forEach var="row" items="${files.rows}">
-	                <div class="media text-muted pt-3">
-	                    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-	                        <div class="d-flex justify-content-between align-items-center w-100">
+            
+            <c:if test="${files.rowCount > 0}">
+                <c:forEach var="row" items="${files.rows}">
+                    <div class="media text-muted pt-3">
+                        <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                            <div class="d-flex justify-content-between align-items-center w-100">
                                 <c:if test="${row.folder == 0}">
                                     <h6><strong class="text-white">${row.name}</strong></h6>
                                 </c:if>
@@ -220,54 +220,54 @@
                                     <h6><a href="?parent=${row.file_id}"><strong>${row.name}</strong></a></h6>
                                 </c:if>
                                 
-                                 <c:if test="${not empty param.rename && param.rename == row.file_id}">	                    
-		                             <form method="get" action="iNuage/action" class="form-inline">
-										<div class="form-group mb-2">
-										  <input type="hidden" readonly value="ren" name="c">
-										  <input type="hidden" readonly value="${param.rename}" name="fid">
-										  <input type="hidden" readonly value="${param.parent}" name="parent">
-										  <input type="hidden" readonly value="${row.folder}" name="isf">
-										</div>
-										<div class="form-group mx-sm-3 mb-2">
-										  <label for="newname" class="sr-only">New Name</label>
-										  <input type="text" class="form-control" required id="newname" placeholder="${row.name}" name="newname">
-										</div>
-	                                    <input type="submit" class="btn btn-primary mb-2" value="Rename">
-	                                </form>
-	                            </c:if>
-	                            
-	                            <c:if test="${not empty param.link && param.link == row.file_id}">                        
+                                 <c:if test="${not empty param.rename && param.rename == row.file_id}">                     
+                                     <form method="get" action="iNuage/action" class="form-inline">
+                                        <div class="form-group mb-2">
+                                          <input type="hidden" readonly value="ren" name="c">
+                                          <input type="hidden" readonly value="${param.rename}" name="fid">
+                                          <input type="hidden" readonly value="${param.parent}" name="parent">
+                                          <input type="hidden" readonly value="${row.folder}" name="isf">
+                                        </div>
+                                        <div class="form-group mx-sm-3 mb-2">
+                                          <label for="newname" class="sr-only">New Name</label>
+                                          <input type="text" class="form-control" required id="newname" placeholder="${row.name}" name="newname">
+                                        </div>
+                                        <input type="submit" class="btn btn-primary mb-2" value="Rename">
+                                    </form>
+                                </c:if>
+                                
+                                <c:if test="${not empty param.link && param.link == row.file_id}">                        
                                         <div class="form-group mb-2">
                                         </div>
                                         <div class="form-group mx-sm-3 mb-2">
-                                          <input type="text" class="form-control" readonly id="newname" value="iNuage/Download?fid=${row.file_id}">
+                                          <input type="text" class="form-control" readonly id="newname" value="http://cs3.calstatela.edu:8080/cs3220stu108/iNuage/Download?fid=${row.file_id}">
                                         </div>
                                 </c:if>
 
-	                            <c:if test="${(empty param.rename && empty param.link) || (not empty param.link && param.link != row.file_id) || not empty param.rename && param.rename != row.file_id}">
-		                            <div style="text-align: right;"><h5>
+                                <c:if test="${(empty param.rename && empty param.link) || (not empty param.link && param.link != row.file_id) || not empty param.rename && param.rename != row.file_id}">
+                                    <div style="text-align: right;"><h5>
                                         <c:if test="${row.folder == 0}">
-				                           <a href="iNuage/Download?fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
-				                           <c:if test="${row.share == 0}">
-				                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0&parent=${param.parent}" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
-				                           </c:if>
-				                           <c:if test="${row.share == 1}">
-				                               <a href="iNuage?link=${row.file_id}&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-link"></i></a>
-				                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1&parent=${param.parent}" style="color: #4CAA46;" class="tooltip-test" title="Stop sharing"><i class="fas fa-share-alt-square"></i></a>
-				                           </c:if>      
+                                           <a href="iNuage/Download?fid=${row.file_id}" style="color: #3F6CDE;" class="tooltip-test" title="Download"><i class="fas fa-download"></i></a>
+                                           <c:if test="${row.share == 0}">
+                                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=0&parent=${param.parent}" style="color: #CCCCCC;" class="tooltip-test" title="Share"><i class="fas fa-share-alt-square"></i></a>
+                                           </c:if>
+                                           <c:if test="${row.share == 1}">
+                                               <a href="iNuage?link=${row.file_id}&parent=${param.parent}" style="color: #4CAA46;"><i class="fas fa-link"></i></a>
+                                               <a href="iNuage/action?c=sha&fid=${row.file_id}&state=1&parent=${param.parent}" style="color: #4CAA46;" class="tooltip-test" title="Stop sharing"><i class="fas fa-share-alt-square"></i></a>
+                                           </c:if>      
                                         </c:if>             
-	                                   <a href="iNuage?rename=${row.file_id}&parent=${param.parent}" style="color: #DCD650;" class="tooltip-test" title="Rename"><i class="fas fa-pen" ></i></a>
-	                                   <a href="iNuage/action?c=del&fid=${row.file_id}&parent=${param.parent}" style="color: #B93842;" class="tooltip-test" title="Delete"><i class="fas fa-trash"></i></a>
-		                            </h5></div>
-	                            </c:if>
-	                        </div>
-	                        <span class="d-block">${row.date}</span>
-	                    </div>
-	                </div>
-	            </c:forEach>
-	        </c:if>
-		</div>
-		<!--------------------->
+                                       <a href="iNuage?rename=${row.file_id}&parent=${param.parent}" style="color: #DCD650;" class="tooltip-test" title="Rename"><i class="fas fa-pen" ></i></a>
+                                       <a href="iNuage/action?c=del&fid=${row.file_id}&parent=${param.parent}" style="color: #B93842;" class="tooltip-test" title="Delete"><i class="fas fa-trash"></i></a>
+                                    </h5></div>
+                                </c:if>
+                            </div>
+                            <span class="d-block">${row.date}</span>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:if>
+        </div>
+        <!--------------------->
 
 
         <!-- UPLOAD PANEL -->
@@ -355,27 +355,27 @@
             </div>
         </div>
         
-		<!-- DELETE ACCOUNT PANEL -->
-		<div class="modal fade" id="accountDeleter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content bg-dark">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Surely, it's wrong !</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">Are you sure you want to permanently delete your iNuage account ?</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">No</button>
-						<a href="iNuage/action?c=delete"><button type="button" class="btn btn-success">Yes</button></a>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- CREDIT PANEL -->		
-		<div class="modal fade" id="crediter" tabindex="-1" role="dialog" aria-labelledby=exampleModalLabel aria-hidden="true">
+        <!-- DELETE ACCOUNT PANEL -->
+        <div class="modal fade" id="accountDeleter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Surely, it's wrong !</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Are you sure you want to permanently delete your iNuage account ?</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">No</button>
+                        <a href="iNuage/action?c=delete"><button type="button" class="btn btn-success">Yes</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CREDIT PANEL -->       
+        <div class="modal fade" id="crediter" tabindex="-1" role="dialog" aria-labelledby=exampleModalLabel aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content bg-dark">
                     <div class="modal-header">
@@ -396,11 +396,11 @@
                     </div>
                 </div>
             </div>
-		</div>
+        </div>
 
-		<small class="d-block text-right mt-3" data-toggle="modal" data-target="#accountDeleter" style="cursor: pointer; color: #0376D1;">Delete Account</small>
-		<small class="d-block text-right mt-3" data-toggle="modal" data-target="#crediter" style="cursor: pointer; color: #0376D1;">CREDITS</small>
-	</div>
+        <small class="d-block text-right mt-3" data-toggle="modal" data-target="#accountDeleter" style="cursor: pointer; color: #0376D1;">Delete Account</small>
+        <small class="d-block text-right mt-3" data-toggle="modal" data-target="#crediter" style="cursor: pointer; color: #0376D1;">CREDITS</small>
+    </div>
 </body>
 
 <!-- FOR DISPLAY PURPOSE ONLY // From bootstrap-->
